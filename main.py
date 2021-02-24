@@ -20,16 +20,34 @@ def move_ball(ball, ball_speed_x, ball_speed_y):
         #ball_speed_y *= -1
     return ball, ball_speed_x, ball_speed_y
 
-def move_player(player, player_speed):
-    player.y += player_speed
-
-    #checking boundaries
+def check_player_bound(player):
+    # checking boundries
     if player.bottom >= screen_height:
         player.bottom = screen_height
     if player.top <= 0:
         player.top = 0
+    
+    return player
+
+def move_player(player, player_speed):
+    player.y += player_speed
+
+    #checking boundaries
+    player = check_player_bound(player)
 
     return player
+
+def move_opponent(player, player_speed, ball):
+    if player.bottom > ball.y:
+        player.bottom -= player_speed
+    if player.top < ball.y:
+        player.top += player_speed
+
+    #checking boundaries
+    player = check_player_bound(player)
+
+    return player
+
 
 
 # Every pygame must have init()
@@ -68,6 +86,7 @@ ball_speed_x, ball_speed_y = 9,9
 
 # player speed 
 p_speed = 0
+o_speed = 6
 
 # Main loop
 while True:
@@ -96,7 +115,7 @@ while True:
     # Moving the ball, and updating 
     ball, ball_speed_x, ball_speed_y = move_ball(ball, ball_speed_x, ball_speed_y)
     player_left = move_player(player_left, p_speed)
-
+    player_right = move_opponent(player_right, o_speed, ball)
     #drawing 
     screen.fill(bg_col)
 
