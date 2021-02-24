@@ -20,6 +20,17 @@ def move_ball(ball, ball_speed_x, ball_speed_y):
         #ball_speed_y *= -1
     return ball, ball_speed_x, ball_speed_y
 
+def move_player(player, player_speed):
+    player.y += player_speed
+
+    #checking boundaries
+    if player.bottom >= screen_height:
+        player.bottom = screen_height
+    if player.top <= 0:
+        player.top = 0
+
+    return player
+
 
 # Every pygame must have init()
 pygame.init()
@@ -69,22 +80,22 @@ while True:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                p_speed += 9
-            if event.key == pygame.K_DOWN:
                 p_speed -= 9
+            if event.key == pygame.K_DOWN:
+                p_speed += 9
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
-                p_speed -= 9
-            if event.key == pygame.K_DOWN:
                 p_speed += 9
+            if event.key == pygame.K_DOWN:
+                p_speed -= 9
 
 
     
 
     # Moving the ball, and updating 
     ball, ball_speed_x, ball_speed_y = move_ball(ball, ball_speed_x, ball_speed_y)
-    player = move_player()
+    player_left = move_player(player_left, p_speed)
 
     #drawing 
     screen.fill(bg_col)
