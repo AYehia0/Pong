@@ -2,6 +2,25 @@ import pygame
 import sys
 
 
+def move_ball(ball, ball_speed_x, ball_speed_y):
+    # Moving the ball
+    ball.x += ball_speed_x
+    ball.y += ball_speed_y
+
+    # checking for bouncing ball
+    if ball.top <= 0 or ball.bottom >= screen_height:
+        ball_speed_y *= -1
+    if ball.left <= 0 or ball.right >= screen_width:
+        ball_speed_x *= -1
+
+    # checking collssion : collidrect is the simplest
+    if ball.colliderect(player_right) or ball.colliderect(player_left):
+        ball_speed_x *= -1
+        # reversing the y axis makes the ball goes the opp side 45 deg 
+        #ball_speed_y *= -1
+    return ball, ball_speed_x, ball_speed_y
+
+
 # Every pygame must have init()
 pygame.init()
 
@@ -36,6 +55,9 @@ player_left = pygame.Rect(margin//2 ,screen_height//2 - players_height//2 ,playe
 # ball speeds
 ball_speed_x, ball_speed_y = 9,9
 
+# player speed 
+p_speed = 0
+
 # Main loop
 while True:
     # checking for events 
@@ -45,20 +67,28 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                p_speed += 9
+            if event.key == pygame.K_DOWN:
+                p_speed -= 9
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
+                p_speed -= 9
+            if event.key == pygame.K_DOWN:
+                p_speed += 9
+
+
     
 
-    # Moving the ball
-    ball.x += ball_speed_x
-    ball.y += ball_speed_y
-
-    # checking for bouncing ball
-    if ball.top <= 0 or ball.bottom >= screen_height:
-        ball_speed_y *= -1
-    if ball.left <= 0 or ball.right >= screen_width:
-        ball_speed_x *= -1
+    # Moving the ball, and updating 
+    ball, ball_speed_x, ball_speed_y = move_ball(ball, ball_speed_x, ball_speed_y)
+    player = move_player()
 
     #drawing 
     screen.fill(bg_col)
+
     pygame.draw.rect(screen, white_col, player_left) # surface , color , object to draw
     pygame.draw.rect(screen, white_col, player_right) # surface , color , object to draw
     pygame.draw.ellipse(screen, white_col, ball)
