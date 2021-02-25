@@ -2,6 +2,14 @@ import pygame
 import sys
 
 
+def draw():
+    #drawing 
+    screen.fill(bg_col)
+    pygame.draw.rect(screen, white_col, player_left) # surface , color , object to draw
+    pygame.draw.rect(screen, white_col, player_right) # surface , color , object to draw
+    pygame.draw.ellipse(screen, white_col, ball)
+    pygame.draw.line(screen, white_col, (mid_pos_x,0), (mid_pos_x, screen_height))
+
 def move_ball(ball, ball_speed_x, ball_speed_y):
     # Moving the ball
     ball.x += ball_speed_x
@@ -116,13 +124,9 @@ while True:
     ball, ball_speed_x, ball_speed_y = move_ball(ball, ball_speed_x, ball_speed_y)
     player_left = move_player(player_left, p_speed)
     player_right = move_opponent(player_right, o_speed, ball)
+    
     #drawing 
-    screen.fill(bg_col)
-
-    pygame.draw.rect(screen, white_col, player_left) # surface , color , object to draw
-    pygame.draw.rect(screen, white_col, player_right) # surface , color , object to draw
-    pygame.draw.ellipse(screen, white_col, ball)
-    pygame.draw.line(screen, white_col, (mid_pos_x,0), (mid_pos_x, screen_height))
+    draw()
     
     # updating vars
     pygame.display.flip()
