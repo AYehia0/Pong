@@ -10,6 +10,16 @@ def draw():
     pygame.draw.ellipse(screen, white_col, ball)
     pygame.draw.line(screen, white_col, (mid_pos_x,0), (mid_pos_x, screen_height))
 
+font_name = pygame.font.match_font('arial')
+def draw_text(surf, text, size, x, y, w_color):
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, w_color )
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
+
+
+
 def move_ball(ball, ball_speed_x, ball_speed_y):
     # Moving the ball
     ball.x += ball_speed_x
@@ -56,8 +66,6 @@ def move_opponent(player, player_speed, ball):
 
     return player
 
-
-
 # Every pygame must have init()
 pygame.init()
 
@@ -96,8 +104,14 @@ ball_speed_x, ball_speed_y = 9,9
 p_speed = 0
 o_speed = 6
 
+
+# Scores 
+p_score = 0
+o_score = 0
+
 # Main loop
 while True:
+
     # checking for events 
     events = pygame.event.get()
 
@@ -117,9 +131,13 @@ while True:
             if event.key == pygame.K_DOWN:
                 p_speed -= 9
 
+  
+    if ball.left <= 0:
+        o_score += 1
+    if ball.right >= screen_width:
+        p_score += 1
 
-    
-
+    print(f"Score:  {p_score},{o_score}")
     # Moving the ball, and updating 
     ball, ball_speed_x, ball_speed_y = move_ball(ball, ball_speed_x, ball_speed_y)
     player_left = move_player(player_left, p_speed)
@@ -127,7 +145,8 @@ while True:
     
     #drawing 
     draw()
-    
+    draw_text(screen,f"{p_score} : {o_score}", 50, screen_width//2 , 20, white_col)
+
     # updating vars
     pygame.display.flip()
     clk.tick(fps)
