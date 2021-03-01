@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+import random
 
 def draw():
     #drawing 
@@ -10,7 +10,6 @@ def draw():
     pygame.draw.ellipse(screen, white_col, ball)
     pygame.draw.line(screen, white_col, (mid_pos_x,0), (mid_pos_x, screen_height))
 
-font_name = pygame.font.match_font('arial')
 def draw_text(surf, text, size, x, y, w_color):
     font = pygame.font.Font(font_name, size)
     text_surface = font.render(text, True, w_color )
@@ -66,6 +65,12 @@ def move_opponent(player, player_speed, ball):
 
     return player
 
+# resets the ball
+def game_over(ball, ball_speed_x, ball_speed_y):
+    ball.center = (screen_width//2, screen_height//2) 
+    ball_speed_x *= random.choice([-1,1])
+    ball_speed_y *= random.choice([-1,1])
+
 # Every pygame must have init()
 pygame.init()
 
@@ -83,7 +88,7 @@ fps = 60
 
 # Screen
 screen = pygame.display.set_mode((screen_width, screen_height))
-
+font_name = pygame.font.match_font('arial')
 # Setting the caption aka title 
 pygame.display.set_caption('GamePong')
 
@@ -134,8 +139,10 @@ while True:
   
     if ball.left <= 0:
         o_score += 1
+        game_over(ball, ball_speed_x, ball_speed_y)
     if ball.right >= screen_width:
         p_score += 1
+        game_over(ball, ball_speed_x, ball_speed_y)
 
     print(f"Score:  {p_score},{o_score}")
     # Moving the ball, and updating 
@@ -145,8 +152,7 @@ while True:
     
     #drawing 
     draw()
-    draw_text(screen,f"{p_score} : {o_score}", 50, screen_width//2 , 20, white_col)
-
+    draw_text(screen,f"{p_score}:{o_score}", 50, screen_width//2 , 20, white_col)
     # updating vars
     pygame.display.flip()
     clk.tick(fps)
