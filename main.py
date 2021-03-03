@@ -17,10 +17,8 @@ def draw_text(surf, text, size, x, y, w_color):
     text_rect.midtop = (x, y)
     surf.blit(text_surface, text_rect)
 
-
-
 def move_ball(ball, ball_speed_x, ball_speed_y):
-    # Moving the ball
+    """Moving the ball"""
     ball.x += ball_speed_x
     ball.y += ball_speed_y
 
@@ -38,6 +36,8 @@ def move_ball(ball, ball_speed_x, ball_speed_y):
     return ball, ball_speed_x, ball_speed_y
 
 def check_player_bound(player):
+    """ Check for the walls to bounce the ball"""
+
     # checking boundries
     if player.bottom >= screen_height:
         player.bottom = screen_height
@@ -47,6 +47,7 @@ def check_player_bound(player):
     return player
 
 def move_player(player, player_speed):
+    """ Moving the player """
     player.y += player_speed
 
     #checking boundaries
@@ -55,6 +56,7 @@ def move_player(player, player_speed):
     return player
 
 def move_opponent(player, player_speed, ball):
+    """Moving an opponent"""
     if player.bottom > ball.y:
         player.bottom -= player_speed
     if player.top < ball.y:
@@ -65,8 +67,8 @@ def move_opponent(player, player_speed, ball):
 
     return player
 
-# resets the ball
 def game_over(ball, ball_speed_x, ball_speed_y):
+    """ Resets the ball after a win """
     ball.center = (screen_width//2, screen_height//2) 
     ball_speed_x *= random.choice([-1,1])
     ball_speed_y *= random.choice([-1,1])
